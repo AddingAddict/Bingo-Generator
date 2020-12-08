@@ -1,7 +1,5 @@
-th, td {
-	width: 30px;
+label {
 	padding: 10px;
-	border: 2px #666 solid;
 	text-align: center;
 	font-size: 24px;
 }
@@ -10,11 +8,22 @@ input {
 	padding: 10px;
 	border: 2px #666 solid;
 	text-align: center;
-	font-size: 24px;
+}
+
+button {
+	padding: 10px;
+	text-align: center;
+}
+
+th, td {
+	padding: 10px;
+	border: 2px #666 solid;
+	text-align: center;
 }
 
 .row {
   	width: 100%;
+	padding: 4px;
   	display: flex;
   	flex-direction: row;
   	justify-content: center;
@@ -22,4 +31,51 @@ input {
 
 .block {
 	padding: 20px;
+}
+
+.text {
+	font-size: 20px;
+}
+
+.input {
+	width: 70px;
+	font-size: 20px;
+}
+
+.gen {
+	font-size: 20px;
+}
+
+.draw {
+	width: 120px;
+	padding: 10px;
+	text-align: center;
+	font-size: 32px;
+}
+
+.drawNum {
+	display: block;
+	width: 70px;
+	height: 36px;
+	padding: 10px;
+	border: 2px #666 solid;
+	text-align: center;
+	font-size: 32px;
+}
+
+.pmNum {
+	width: 100px;
+	padding: 10px;
+	border: 2px #666 solid;
+	text-align: center;
+	font-size: 32px;
+}
+
+.name {
+	font-size: 24px;
+}
+
+.cell {
+	width: 30px;
+	font-size: 24px;
 }
