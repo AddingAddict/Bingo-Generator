@@ -18,6 +18,17 @@ function genBoards() {
 	draws = shuffleNums();
 	drawInd = null;
 
+	// reset draw number
+	let drawNum = document.getElementById("drawNum");
+	let pNum = document.getElementById("pNum");
+	let mNum = document.getElementById("mNum");
+
+	drawNum.innerHTML = "";
+	pNum.value = "";
+	pNum.setAttribute("placeholder", "")
+	mNum.value = "";
+	mNum.setAttribute("placeholder", "")
+
 	// check if there's enough numbers for bingo board
 	if((max - min + 1) < size*size) {
 		alert("Board size too large for given number range.\nIncrease the number range or decrease board size.")
