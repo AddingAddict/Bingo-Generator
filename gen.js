@@ -1,18 +1,20 @@
 window.onload = genBoards;
 
+let nBoards;
+let size;
 let min;
 let max;
-let size;
-let nBoards;
+let incr;
 let draws;
 let drawInd;
 
 function genBoards() {
 	// read input
+	nBoards = parseInt(document.getElementById("nBoards").value);
+	size = parseInt(document.getElementById("size").value);
 	min = parseInt(document.getElementById("min").value);
 	max = parseInt(document.getElementById("max").value);
-	size = parseInt(document.getElementById("size").value);
-	nBoards = parseInt(document.getElementById("nBoards").value);
+	incr = parseInt(document.getElementById("incr").value);
 	draws = shuffleNums();
 	drawInd = null;
 
@@ -34,29 +36,53 @@ function genBoards() {
 }
 
 function draw() {
+	// reread increment
+	incr = parseInt(document.getElementById("incr").value);
+
+	// get number elements
+	let drawNum = document.getElementById("drawNum");
+	let pNum = document.getElementById("pNum");
+	let mNum = document.getElementById("mNum");
+
+	// increase the draw index if possible
 	if(drawInd == null) {
 		drawInd = 0;
-		document.getElementById("drawNum").innerHTML = draws[drawInd];
-		document.getElementById("pNum").value = "";
-		document.getElementById("mNum").value = "";
+		drawNum.innerHTML = draws[drawInd];
+		pNum.value = "";
+		pNum.setAttribute("placeholder", draws[drawInd] + "+" + incr)
+		mNum.value = "";
+		mNum.setAttribute("placeholder", draws[drawInd] + "-" + incr)
 	} else if(drawInd < draws.length - 1) {
 		drawInd += 1;
-		document.getElementById("drawNum").innerHTML = draws[drawInd];
-		document.getElementById("pNum").value = "";
-		document.getElementById("mNum").value = "";
+		drawNum.innerHTML = draws[drawInd];
+		pNum.value = "";
+		pNum.setAttribute("placeholder", draws[drawInd] + "+" + incr)
+		mNum.value = "";
+		mNum.setAttribute("placeholder", draws[drawInd] + "-" + incr)
 	} else {
 		alert("Out of numbers.");
 	}
 }
 
 function back() {
+	// reread increment
+	incr = parseInt(document.getElementById("incr").value);
+	
+	// get number elements
+	let drawNum = document.getElementById("drawNum");
+	let pNum = document.getElementById("pNum");
+	let mNum = document.getElementById("mNum");
+
+	// decrease the draw index if possible
 	if(drawInd == 0 || drawInd == null) {
 		alert("Can't go back.")
 	} else {
 		drawInd -= 1;
-		document.getElementById("drawNum").innerHTML = draws[drawInd];
-		document.getElementById("pNum").value = "";
-		document.getElementById("mNum").value = "";
+		drawNum.innerHTML = draws[drawInd];
+		pNum.value = "";
+		pNum.setAttribute("placeholder", draws[drawInd] + "+" + incr)
+		mNum.value = "";
+		mNum.setAttribute("placeholder", draws[drawInd] + "-" + incr)
 	}
 }
 
@@ -70,6 +96,7 @@ function newBoard(nBoard) {
 	name.className = "name";
 	name.style.width = (size*56+2) + "px";
 	name.setAttribute("type", "text");
+	name.setAttribute("placeholder", "Player " + (nBoard + 1))
 	board.appendChild(name);
 
 	// shuffle number range
