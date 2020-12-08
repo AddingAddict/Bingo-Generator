@@ -1,25 +1,43 @@
-window.onload = newBoard;
+window.onload = genBoards;
 
 var min = 1;
-var max = 20;
+var max = 30;
 var size = 4;
+var nBoards = 3;
 
-function newBoard() {
+function genBoards() {
 	// get div with boards
-	var boards = document.getElementById("boards");
+	let boards = document.getElementById("boards");
 
 	// clear previous boards
 	boards.innerHTML = "";
 
+	// fill with boards
+	for(let i = 0; i < nBoards; i++) {
+		boards.appendChild(newBoard(i));
+	}
+}
+
+function newBoard(nBoard) {
+	// create div with board
+	let board = document.createElement("DIV");
+	board.setAttribute("class", "block")
+
+	// add text box for student's name
+	let name = document.createElement("INPUT");
+	name.setAttribute("type", "text");
+	name.style.width = (size*56+2) + "px";
+	board.appendChild(name);
+
 	// store used numbers
-	var usedNums = new Array(max+1);
+	let usedNums = new Array(max+1);
 
 	// start a <table> node
-	var tab = document.createElement("TABLE");
+	let tab = document.createElement("TABLE");
 
 	// assemble rows of the table
 	for(let i=0; i < size; i++) {
-		var row = document.createElement("TR");
+		let row = document.createElement("TR");
 
 		// fill row with numbers
 		for(let j=0; j < size; j++) {
@@ -32,8 +50,10 @@ function newBoard() {
 			usedNums[num] = true;
 
 			// fill row with number
-			var cell = document.createElement("TH");
-			cell.appendChild(document.createTextNode(num.toString()));
+			let cell = document.createElement("TH");
+			cell.setAttribute("id", "cell" + nBoard.toString() + i.toString() + j.toString())
+			cell.addEventListener("click", function() { toggle(nBoard, i, j) } );
+			cell.appendChild(document.createTextNode(num));
 			row.appendChild(cell);
 		}
 
@@ -42,5 +62,16 @@ function newBoard() {
 	}
 
 	// add table to div with boards
-	boards.appendChild(tab)
+	board.appendChild(tab);
+
+	return board;
+}
+
+function toggle(nBoard, i, j) {
+	let cell = document.getElementById("cell" + nBoard.toString() + i.toString() + j.toString());
+	if(cell.style.backgroundColor == "") {
+		cell.style.backgroundColor = "DimGray";
+	} else {
+		cell.style.backgroundColor = "";
+	}
 }
