@@ -1,10 +1,9 @@
-window.onload = genBoards;
-
 let nBoards;
 let size;
 let min;
 let max;
 let incr;
+let allNums;
 let draws;
 let drawInd;
 
@@ -15,8 +14,8 @@ function genBoards() {
 	min = parseInt(document.getElementById("min").value);
 	max = parseInt(document.getElementById("max").value);
 	incr = parseInt(document.getElementById("incr").value);
-	draws = shuffleNums();
-	drawInd = null;
+	allNums = [...Array(max + 1).keys()].slice(min);
+	allNums.fill(false);
 
 	// reset draw number
 	let drawNum = document.getElementById("drawNum");
@@ -31,7 +30,9 @@ function genBoards() {
 
 	// check if there's enough numbers for bingo board
 	if((max - min + 1) < size*size) {
-		alert("Board size too large for given number range.\nIncrease the number range or decrease board size.")
+		alert("Board size too large for given number range.\nIncrease the number range or decrease board size.");
+	} else if((max - min + 1) < 2*incr) {
+		alert("Increment too large for given number range.\nIncrease the number range or decrease increment.");
 	} else {
 		// get div with boards
 		let boards = document.getElementById("boards");
@@ -44,12 +45,38 @@ function genBoards() {
 			boards.appendChild(newBoard(i));
 		}
 	}
+
+	let usableNums = [...Array(max + 1).keys()].slice(min);
+	usableNums.fill(true);
+
+	for(let i = 0; i < allNums.length-2*incr; i++) {
+		if(!allNums[2*incr+i] && !allNums[i]) {
+			usableNums[incr+i] = false;
+		}
+	}
+
+	for(let i = 0; i < incr; i++) {
+		if(!allNums[incr+i]) {
+			usableNums[i] = false;
+		}
+		if(!allNums[allNums.length-(incr+i+1)]) {
+			usableNums[allNums.length-(i+1)] = false;
+		}
+	}
+
+	let nums = [];
+	for(let i = 0; i < allNums.length; i++) {
+		if(usableNums[i]) {
+			nums.push(min+i);
+		}
+	}
+
+	// prepare draw numbers
+	draws = shuffleNums(nums);
+	drawInd = null;
 }
 
 function draw() {
-	// reread increment
-	incr = parseInt(document.getElementById("incr").value);
-
 	// get number elements
 	let drawNum = document.getElementById("drawNum");
 	let pNum = document.getElementById("pNum");
@@ -76,9 +103,6 @@ function draw() {
 }
 
 function back() {
-	// reread increment
-	incr = parseInt(document.getElementById("incr").value);
-	
 	// get number elements
 	let drawNum = document.getElementById("drawNum");
 	let pNum = document.getElementById("pNum");
@@ -111,7 +135,7 @@ function newBoard(nBoard) {
 	board.appendChild(name);
 
 	// shuffle number range
-	let nums = shuffleNums();
+	let nums = shuffleNums([...Array(max + 1).keys()].slice(min));
 
 	// start a <table> node
 	let tab = document.createElement("TABLE");
@@ -124,6 +148,7 @@ function newBoard(nBoard) {
 		for(let j=0; j < size; j++) {
 			// pick a number from the shuffled list in order
 			let num = nums[i*size + j]
+			allNums[num-min] = true;
 
 			// fill row with number
 			let cell = document.createElement("TH");
@@ -156,10 +181,7 @@ function toggle(nBoard, i, j) {
 	}
 }
 
-function shuffleNums() {
-	// create array with all numbers in range
-	let nums = [...Array(max + 1).keys()].slice(min);
-
+function shuffleNums(nums) {
 	// shuffle array
 	let currInd = nums.length;
 	let randInd;
