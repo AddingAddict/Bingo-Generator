@@ -3,7 +3,9 @@ let size;
 let min;
 let max;
 let incr;
-let allNums;
+let usedNums;
+let sharedNums;
+let remainNums;
 let draws;
 let drawInd;
 
@@ -14,8 +16,13 @@ function genBoards() {
 	min = parseInt(document.getElementById("min").value);
 	max = parseInt(document.getElementById("max").value);
 	incr = parseInt(document.getElementById("incr").value);
-	allNums = [...Array(max + 1).keys()].slice(min);
-	allNums.fill(false);
+	usedNums = [...Array(max + 1).keys()].slice(min);
+	usedNums.fill(false);
+
+	// generate shared numbers (half of the board)
+	let allNums = shuffleNums([...Array(max + 1).keys()].slice(min));
+	sharedNums = allNums.slice(0, Math.floor(size*size / 2));
+	remainNums = allNums.slice(Math.floor(size*size / 2));
 
 	// reset draw number
 	let drawNum = document.getElementById("drawNum");
@@ -49,23 +56,23 @@ function genBoards() {
 	let usableNums = [...Array(max + 1).keys()].slice(min);
 	usableNums.fill(true);
 
-	for(let i = 0; i < allNums.length-2*incr; i++) {
-		if(!allNums[2*incr+i] && !allNums[i]) {
+	for(let i = 0; i < usedNums.length-2*incr; i++) {
+		if(!usedNums[2*incr+i] && !usedNums[i]) {
 			usableNums[incr+i] = false;
 		}
 	}
 
 	for(let i = 0; i < incr; i++) {
-		if(!allNums[incr+i]) {
+		if(!usedNums[incr+i]) {
 			usableNums[i] = false;
 		}
-		if(!allNums[allNums.length-(incr+i+1)]) {
-			usableNums[allNums.length-(i+1)] = false;
+		if(!usedNums[usedNums.length-(incr+i+1)]) {
+			usableNums[usedNums.length-(i+1)] = false;
 		}
 	}
 
 	let nums = [];
-	for(let i = 0; i < allNums.length; i++) {
+	for(let i = 0; i < usedNums.length; i++) {
 		if(usableNums[i]) {
 			nums.push(min+i);
 		}
@@ -139,8 +146,8 @@ function newBoard(nBoard) {
 	name.setAttribute("placeholder", "Player " + (nBoard + 1))
 	board.appendChild(name);
 
-	// shuffle number range
-	let nums = shuffleNums([...Array(max + 1).keys()].slice(min));
+	// shuffle number range, enforcing that sharedNums is included
+	let nums = shuffleNums(sharedNums.concat(shuffleNums(remainNums).slice(0,size*size - Math.floor(size*size/2))));
 
 	// start a <table> node
 	let tab = document.createElement("TABLE");
@@ -153,7 +160,7 @@ function newBoard(nBoard) {
 		for(let j=0; j < size; j++) {
 			// pick a number from the shuffled list in order
 			let num = nums[i*size + j]
-			allNums[num-min] = true;
+			usedNums[num-min] = true;
 
 			// fill row with number
 			let cell = document.createElement("TH");
