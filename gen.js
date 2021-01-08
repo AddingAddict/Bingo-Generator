@@ -128,8 +128,13 @@ function newBoard(nBoard) {
 
 	// add text box for student's name
 	let name = document.createElement("INPUT");
+	let namewidth = 0;
 	name.className = "name";
-	name.style.width = (size*56+2) + "px";
+	if(min < 100) {
+		name.style.width = (size*56+2) + "px";
+	} else {
+		name.style.width = (size*62+2) + "px";
+	}
 	name.setAttribute("type", "text");
 	name.setAttribute("placeholder", "Player " + (nBoard + 1))
 	board.appendChild(name);
