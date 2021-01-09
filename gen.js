@@ -21,8 +21,8 @@ function genBoards() {
 
 	// generate shared numbers (half of the board)
 	let allNums = shuffleNums([...Array(max + 1).keys()].slice(min));
-	sharedNums = allNums.slice(0, Math.floor(size*size / 2));
-	remainNums = allNums.slice(Math.floor(size*size / 2));
+	sharedNums = allNums.slice(0, Math.floor(size*size*0.5));
+	remainNums = allNums.slice(Math.floor(size*size*0.5), Math.min(max-min+1,Math.floor(size*size*1.5)));
 
 	// reset draw number
 	let drawNum = document.getElementById("drawNum");
@@ -147,7 +147,7 @@ function newBoard(nBoard) {
 	board.appendChild(name);
 
 	// shuffle number range, enforcing that sharedNums is included
-	let nums = shuffleNums(sharedNums.concat(shuffleNums(remainNums).slice(0,size*size - Math.floor(size*size/2))));
+	let nums = shuffleNums(sharedNums.concat(shuffleNums(remainNums).slice(0,size*size - Math.floor(size*size*0.5))));
 
 	// start a <table> node
 	let tab = document.createElement("TABLE");
